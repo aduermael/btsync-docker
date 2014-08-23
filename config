@@ -1,7 +1,6 @@
 {
   "device_name": "btsync-docker-volume",
   "listening_port": 55555,
-  "storage_path": "/btsync/.sync",
   "check_for_updates": true,
   "use_upnp": true,
   "download_limit": 0,
