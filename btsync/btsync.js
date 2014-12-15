@@ -94,12 +94,22 @@ function start()
 
 function addFolder()
 {
-	// TODO: check if folder exists
+	
 	// TODO: make sure folder is not already registered
 	// TODO: make sure folder is not nested in already registered folder
 
-
+	// absolute path to folder
 	var folderPath = process.argv[3];
+
+	var folderExists = parseInt(exec("if [ -d " + folderPath +" ]; then echo 1; else echo 0; fi").stdout);
+
+	if (folderExists == 0)
+	{
+		console.log("Can't find " + folderPath);
+		return;
+	}
+
+
 	var secret;
 
 	if (process.argv.length > 4) // means we have a btsync key
