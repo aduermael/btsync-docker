@@ -94,12 +94,15 @@ function start()
 
 function addFolder()
 {
-	
-	// TODO: make sure folder is not already registered
+
+	// TODO: rm .SyncID in folder
 	// TODO: make sure folder is not nested in already registered folder
 
 	// absolute path to folder
 	var folderPath = process.argv[3];
+
+
+	// Check if folder exists
 
 	var folderExists = parseInt(exec("if [ -d " + folderPath +" ]; then echo 1; else echo 0; fi").stdout);
 
@@ -108,6 +111,42 @@ function addFolder()
 		console.log("Can't find " + folderPath);
 		return;
 	}
+
+	// Load config file
+
+	var config = fs.readFileSync("/btsync/config");
+	if (config)
+	{
+		config = JSON.parse(config);
+	}
+	else
+	{
+		console.log("Can't load config file");
+		return;
+	}
+
+
+	// Check if folder has already been registered
+
+	var alreadyRegistered = false;
+
+	for (var i = 0; i < config.shared_folders.length; i++)
+	{
+		if (folderPath == config.shared_folders[i].dir)
+		{
+			alreadyRegistered = true;
+			break;
+		}
+	}
+
+	if (alreadyRegistered)
+	{
+		console.log("This folder has already been registered");
+		return;
+	}
+
+
+
 
 
 	var secret;
@@ -121,30 +160,25 @@ function addFolder()
 		secret = exec("btsync --generate-secret").stdout;
 		secret = secret.substring(0, secret.length - 2); // remove "\n"
 	}
+	
 
-	var config = fs.readFileSync("/btsync/config");
+	var folder = {};
 
-	if ( config )
-	{
-		config = JSON.parse(config);
+	folder.secret = secret;
+	folder.dir = folderPath;
 
-		var folder = {};
+	folder.use_relay_server = true;
+	folder.use_tracker = true;
+	folder.use_dht = false;
+	folder.search_lan = true;
+	folder.use_sync_trash = true;
 
-		folder.secret = secret;
-		folder.dir = folderPath;
+	config.shared_folders.push(folder);
 
-		folder.use_relay_server = true;
-		folder.use_tracker = true;
-		folder.use_dht = false;
-		folder.search_lan = true;
-		folder.use_sync_trash = true;
+	fs.writeFileSync("/btsync/config", JSON.stringify(config));
 
-		config.shared_folders.push(folder);
-
-		fs.writeFileSync("/btsync/config", JSON.stringify(config));
-
-		console.log("Added " + folderPath);
-	}
+	console.log("Added " + folderPath);
+	
 }
 
 
