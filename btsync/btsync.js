@@ -94,8 +94,6 @@ function start()
 
 function addFolder()
 {
-
-	// TODO: rm .SyncID in folder
 	// TODO: make sure folder is not nested in already registered folder
 
 	// absolute path to folder
@@ -145,9 +143,12 @@ function addFolder()
 		return;
 	}
 
+	// Remove .SyncID from this folder to avoid errors if it has been synced before with another key
+
+	exec("rm " + folderPath + "/.SyncID");
 
 
-
+	// Use secret from parameters or generate one
 
 	var secret;
 
@@ -160,8 +161,10 @@ function addFolder()
 		secret = exec("btsync --generate-secret").stdout;
 		secret = secret.substring(0, secret.length - 2); // remove "\n"
 	}
-	
 
+
+	// Update config file
+	
 	var folder = {};
 
 	folder.secret = secret;
@@ -178,7 +181,6 @@ function addFolder()
 	fs.writeFileSync("/btsync/config", JSON.stringify(config));
 
 	console.log("Added " + folderPath);
-	
 }
 
 
