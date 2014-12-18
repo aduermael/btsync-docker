@@ -52,6 +52,12 @@ if (command)
 
 			break;
 
+		case "start":
+
+			start();
+
+			break;
+
 		case "folders":
 
 			folders();
@@ -90,7 +96,19 @@ function init()
 // restarts btsync
 function start()
 {
+	var pid = exec("pidof btsync").stdout;
+	
+	if (pid)
+	{
+		console.log("kill btsync");
+		exec("kill -9 " + pid);
+	}
+	else
+	{
+		console.log("btsync not running");
+	}
 
+	console.dir(exec("btsync --config config"));
 }
 
 
@@ -166,7 +184,7 @@ function addFolder()
 
 
 	// Update config file
-	
+
 	var folder = {};
 
 	folder.secret = secret;
