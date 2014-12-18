@@ -78,6 +78,8 @@ function init()
 	config.use_upnp = true;
 	config.download_limit = 0;
 	config.upload_limit = 0;
+	config.storage_path = "/btsync/storage";
+	config.webui = {};
 	config.shared_folders = [];
 
 	console.log("Initialized config file");

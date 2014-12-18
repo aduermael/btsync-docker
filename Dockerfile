@@ -15,6 +15,7 @@ RUN curl -o /usr/bin/btsync.tar http://download-new.utorrent.com/endpoint/btsync
 RUN cd /usr/bin; tar xvf btsync.tar; rm btsync.tar; rm LICENSE.TXT
 
 ADD btsync /btsync
+RUN mkdir /btsync/storage
 
 EXPOSE 55555
 
