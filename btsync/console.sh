@@ -14,11 +14,11 @@ while true; do
 
         folders ) nodejs btsync.js folders;;
 		
-		add-folder ) nodejs btsync.js $args;;
+		add-folder ) nodejs btsync.js $args; nodejs btsync.js restart;;
 
-		remove-folder ) nodejs btsync.js $args;;
+		remove-folder ) nodejs btsync.js $args; nodejs btsync.js restart;;
 		
-		detach ) exit;;
+		detach ) echo "Detach from container: Ctrl-p Ctrl-q";;
 
 		clear ) clear;;
 

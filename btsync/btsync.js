@@ -52,9 +52,9 @@ if (command)
 
 			break;
 
-		case "start":
+		case "restart":
 
-			start();
+			restart();
 
 			break;
 
@@ -65,12 +65,12 @@ if (command)
 			break;
 
 		default:
-		console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config}");
+		console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config|restart}");
 	}
 }
 else
 {
-	console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config}");
+	console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config|restart}");
 }
 
 
@@ -94,21 +94,21 @@ function init()
 }
 
 // restarts btsync
-function start()
+function restart()
 {
 	var pid = exec("pidof btsync").stdout;
 	
 	if (pid)
 	{
-		console.log("kill btsync");
+		// console.log("kill btsync");
 		exec("kill -9 " + pid);
 	}
 	else
 	{
-		console.log("btsync not running");
+		//console.log("btsync not running");
 	}
 
-	console.dir(exec("btsync --config config"));
+	exec("btsync --config config");
 }
 
 
@@ -200,7 +200,27 @@ function addFolder()
 
 	fs.writeFileSync("/btsync/config", JSON.stringify(config));
 
+	// LOG
+
 	console.log("Added " + folderPath);
+
+	var readonly = exec("btsync --get-ro-secret " + secret).stdout;
+			
+	// is secret not valid read-write exec will return:
+	// <SECRET> is not valid read-write secret
+
+	readonly = readonly.substring(0,secret.length);
+	
+	if ( secret != readonly )
+	{
+		console.log("      secret: " + secret);
+		console.log("      read-only: " + readonly);
+	}
+	else
+	{
+		console.log("      secret: " + secret + " (read-only)");
+	}
+
 }
 
 
