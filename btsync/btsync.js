@@ -108,7 +108,7 @@ function restart()
 		//console.log("btsync not running");
 	}
 
-	exec("btsync --config config");
+	exec("btsync --config /btsync/config");
 }
 
 
