@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cmds="Commands: {folders|add-folder|remove-folder|detach|clear|help|stop}"
+cmds="Commands: {folders|add-folder|remove-folder|detach|clear|help|ls|cd}"
 echo $cmds
 
 while true; do
@@ -22,9 +22,11 @@ while true; do
 
 		clear ) clear;;
 
+		ls ) $args;;
+
+		cd ) $args;;
+
 		help ) echo $cmds;;		
-        
-        stop ) exit;;
         
         * ) echo $cmds;;
     
