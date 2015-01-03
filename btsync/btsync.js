@@ -52,9 +52,9 @@ if (command)
 
 			break;
 
-		case "start":
+		case "restart":
 
-			start();
+			restart();
 
 			break;
 
@@ -65,12 +65,12 @@ if (command)
 			break;
 
 		default:
-		console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config}");
+		console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config|restart}");
 	}
 }
 else
 {
-	console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config}");
+	console.log("Commands: {init|add-folder|remove-folder|device-name|folders|config|restart}");
 }
 
 
@@ -94,21 +94,21 @@ function init()
 }
 
 // restarts btsync
-function start()
+function restart()
 {
 	var pid = exec("pidof btsync").stdout;
 	
 	if (pid)
 	{
-		console.log("kill btsync");
+		// console.log("kill btsync");
 		exec("kill -9 " + pid);
 	}
 	else
 	{
-		console.log("btsync not running");
+		//console.log("btsync not running");
 	}
 
-	console.dir(exec("btsync --config config"));
+	exec("btsync --config /btsync/config");
 }
 
 
@@ -200,7 +200,27 @@ function addFolder()
 
 	fs.writeFileSync("/btsync/config", JSON.stringify(config));
 
+	// LOG
+
 	console.log("Added " + folderPath);
+
+	var readonly = exec("btsync --get-ro-secret " + secret).stdout;
+			
+	// is secret not valid read-write exec will return:
+	// <SECRET> is not valid read-write secret
+
+	readonly = readonly.substring(0,secret.length);
+	
+	if ( secret != readonly )
+	{
+		console.log("      secret: " + secret);
+		console.log("      read-only: " + readonly);
+	}
+	else
+	{
+		console.log("      secret: " + secret + " (read-only)");
+	}
+
 }
 
 
@@ -300,29 +320,3 @@ function config()
 		console.log("Config file not found");
 	}
 }
-
-
-
-
-// sample
-/*
-{
-  "device_name": "btsync-docker-77a067758d47",
-  "listening_port": 55555,
-  "check_for_updates": true,
-  "use_upnp": true,
-  "download_limit": 0,
-  "upload_limit": 0,
-  "shared_folders": [
-    {
-      "secret": "AHUKW5VAZOOYZRCTQTGOWYJY2RUZPGKP5",
-      "dir": "/test",
-      "use_relay_server": true,
-      "use_tracker": true,
-      "use_dht": false,
-      "search_lan": true,
-      "use_sync_trash": true
-    }
-  ]
-}
-*/
