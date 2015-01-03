@@ -320,29 +320,3 @@ function config()
 		console.log("Config file not found");
 	}
 }
-
-
-
-
-// sample
-/*
-{
-  "device_name": "btsync-docker-77a067758d47",
-  "listening_port": 55555,
-  "check_for_updates": true,
-  "use_upnp": true,
-  "download_limit": 0,
-  "upload_limit": 0,
-  "shared_folders": [
-    {
-      "secret": "AHUKW5VAZOOYZRCTQTGOWYJY2RUZPGKP5",
-      "dir": "/test",
-      "use_relay_server": true,
-      "use_tracker": true,
-      "use_dht": false,
-      "search_lan": true,
-      "use_sync_trash": true
-    }
-  ]
-}
-*/
