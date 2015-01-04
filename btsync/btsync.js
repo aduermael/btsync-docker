@@ -28,7 +28,7 @@ if (command)
 			}
 			else
 			{
-				console.log("Usage: add-folder PATH_TO_FOLDER BTSYNC_KEY(optional) ");
+				console.log("Usage: add-folder ABSOLUTE_PATH_TO_FOLDER BTSYNC_KEY(optional) ");
 			}
 
 			break;
@@ -41,7 +41,7 @@ if (command)
 			}
 			else
 			{
-				console.log("Usage: remove-folder PATH_TO_FOLDER");
+				console.log("Usage: remove-folder ABSOLUTE_PATH_TO_FOLDER");
 			}
 
 			break;
@@ -93,7 +93,7 @@ function init()
 	fs.writeFileSync("/btsync/config", JSON.stringify(config));
 }
 
-// restarts btsync
+
 function restart()
 {
 	var pid = exec("pidof btsync").stdout;
@@ -112,10 +112,11 @@ function restart()
 }
 
 
+// TODO: make sure folder is not nested in already registered folder
+// TODO: accept relative path
+
 function addFolder()
 {
-	// TODO: make sure folder is not nested in already registered folder
-
 	// absolute path to folder
 	var folderPath = process.argv[3];
 
@@ -164,6 +165,7 @@ function addFolder()
 	}
 
 	// Remove .SyncID from this folder to avoid errors if it has been synced before with another key
+	// (may not be needed anymore with recent version of BTSync)
 
 	exec("rm " + folderPath + "/.SyncID");
 
@@ -224,7 +226,7 @@ function addFolder()
 }
 
 
-
+// TODO: accept relative path or just folder name and prompt for different options if needed
 
 function removeFolder()
 {
